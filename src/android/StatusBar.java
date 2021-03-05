@@ -35,6 +35,7 @@ import org.apache.cordova.LOG;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import java.util.Arrays;
+import com.squintmetrics.thisispnhdev.R;
 
 public class StatusBar extends CordovaPlugin {
     private static final String TAG = "StatusBar";
@@ -95,6 +96,11 @@ public class StatusBar extends CordovaPlugin {
             return true;
         }
 
+        if ("height".equals(action)) {
+            float statusBarHeight = getStatusBarHeight();
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, statusBarHeight));
+            return true;
+        }
         if ("show".equals(action)) {
             this.cordova.getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -112,6 +118,10 @@ public class StatusBar extends CordovaPlugin {
                     // CB-11197 We still need to update LayoutParams to force status bar
                     // to be hidden when entering e.g. text fields
                     window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(Color.TRANSPARENT);
+                    android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.bg_toolbar);
+                    window.setBackgroundDrawable(background);
                 }
             });
             return true;
@@ -126,8 +136,7 @@ public class StatusBar extends CordovaPlugin {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         int uiOptions = window.getDecorView().getSystemUiVisibility()
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN;
 
                         window.getDecorView().setSystemUiVisibility(uiOptions);
                     }
@@ -214,6 +223,15 @@ public class StatusBar extends CordovaPlugin {
         return false;
     }
 
+    private float getStatusBarHeight() {
+        float statusBarHeight = 0;
+        int resourceId = cordova.getActivity().getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            float scaleRatio = cordova.getActivity().getResources().getDisplayMetrics().density;
+            statusBarHeight = cordova.getActivity().getResources().getDimension(resourceId) / scaleRatio;
+        }
+        return statusBarHeight;
+    }
     private void setStatusBarBackgroundColor(final String colorPref) {
         if (Build.VERSION.SDK_INT >= 21) {
             if (colorPref != null && !colorPref.isEmpty()) {
