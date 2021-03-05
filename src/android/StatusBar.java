@@ -120,7 +120,7 @@ public class StatusBar extends CordovaPlugin {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setStatusBarColor(Color.TRANSPARENT);
-                    android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.bg_toolbar);
+                    android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.statusbar);
                     window.setBackgroundDrawable(background);
                 }
             });
