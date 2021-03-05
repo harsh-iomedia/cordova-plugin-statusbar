@@ -120,8 +120,7 @@ public class StatusBar extends CordovaPlugin {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setStatusBarColor(Color.TRANSPARENT);
-                    android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.statusbar);
-                    window.setBackgroundDrawable(background);
+                    
                 }
             });
             return true;
@@ -155,6 +154,19 @@ public class StatusBar extends CordovaPlugin {
                 public void run() {
                     try {
                         setStatusBarBackgroundColor(args.getString(0));
+                    } catch (JSONException ignore) {
+                        LOG.e(TAG, "Invalid hexString argument, use f.i. '#777777'");
+                    }
+                }
+            });
+            return true;
+        }
+        if ("changeGradient".equals(action)) {
+            this.cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        setGradientStyle(args.getString(0));
                     } catch (JSONException ignore) {
                         LOG.e(TAG, "Invalid hexString argument, use f.i. '#777777'");
                     }
@@ -231,6 +243,24 @@ public class StatusBar extends CordovaPlugin {
             statusBarHeight = cordova.getActivity().getResources().getDimension(resourceId) / scaleRatio;
         }
         return statusBarHeight;
+    }
+    private void setGradientStyle(final String gradientStyle) {
+        try {
+            LOG.e(TAG, "Changing gradient via argument"+ gradientStyle);
+            final Window window = cordova.getActivity().getWindow();
+            if (gradientStyle != null && !gradientStyle.isEmpty()) {
+                LOG.e(TAG, "In If Changing gradient via argument"+ gradientStyle);
+                android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.statusbar_1);
+                window.setBackgroundDrawable(background);
+            }
+            else{
+                LOG.e(TAG, "In Else Changing gradient via argument"+ gradientStyle);
+                android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.statusbar);
+                window.setBackgroundDrawable(background);
+            }
+        } catch (Exception ignore) {
+            LOG.e(TAG, "invalid gradient argument"+ gradientStyle + ignore);
+        }
     }
     private void setStatusBarBackgroundColor(final String colorPref) {
         if (Build.VERSION.SDK_INT >= 21) {

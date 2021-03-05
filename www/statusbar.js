@@ -86,6 +86,9 @@ var StatusBar = {
 
         exec(null, null, 'StatusBar', 'backgroundColorByHexString', [hexString]);
     },
+    changeGradient: function (styleString) {
+        exec(null, null, 'StatusBar', 'changeGradient', [styleString]);
+    },
 
     hide: function () {
         exec(null, null, 'StatusBar', 'hide', []);
