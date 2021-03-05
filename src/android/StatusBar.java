@@ -119,7 +119,6 @@ public class StatusBar extends CordovaPlugin {
                     // to be hidden when entering e.g. text fields
                     window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setStatusBarColor(Color.TRANSPARENT);
                     
                 }
             });
@@ -246,15 +245,16 @@ public class StatusBar extends CordovaPlugin {
     }
     private void setGradientStyle(final String gradientStyle) {
         try {
-            LOG.e(TAG, "Changing gradient via argument"+ gradientStyle);
+            // LOG.e(TAG, "Changing gradient via argument"+ gradientStyle);
             final Window window = cordova.getActivity().getWindow();
+            window.setStatusBarColor(Color.TRANSPARENT);
             if (gradientStyle != null && !gradientStyle.isEmpty()) {
-                LOG.e(TAG, "In If Changing gradient via argument"+ gradientStyle);
+                // LOG.e(TAG, "In If Changing gradient via argument"+ gradientStyle);
                 android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.statusbar_1);
                 window.setBackgroundDrawable(background);
             }
             else{
-                LOG.e(TAG, "In Else Changing gradient via argument"+ gradientStyle);
+                // LOG.e(TAG, "In Else Changing gradient via argument"+ gradientStyle);
                 android.graphics.drawable.Drawable background = cordova.getActivity().getResources().getDrawable(R.drawable.statusbar);
                 window.setBackgroundDrawable(background);
             }
